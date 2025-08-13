@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Creative CV Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1: #1e293b; /* Dark blue */
+    --accent1: #7c3aed; /* Purple */
+    --accent2: #06b6d4; /* Teal */
+    --accent3: #f59e0b; /* Amber */
+    --card: #ffffff;
+    --muted: #64748b;
+    --light-bg: #f8fafc;
+    --radius: 12px;
+    --glass: rgba(255,255,255,0.06);
+    --success: #10b981; /* Emerald */
+    --warning: #f59e0b; /* Amber */
+    --error: #ef4444; /* Red */
+  }
+  
+  *{box-sizing:border-box}
+  
+  body{
+    margin:0; 
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0fdfa 100%);
+    color:#0f172a; 
+    -webkit-font-smoothing:antialiased; 
+    -moz-osx-font-smoothing:grayscale;
+    display:flex; 
+    justify-content:center;
+    align-items: center;
+    min-height:100vh;
+    padding:20px;
+    line-height: 1.5;
+  }
+  
+  .wrap{
+    width:100%; 
+    max-width:1100px;
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  header{
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    gap:10px; 
+    margin-bottom:24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  h1{
+    font-size:24px;
+    margin:0;
+    color:var(--bg-1);
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+  }
+  
+  .subtitle{
+    color:var(--muted); 
+    font-size:14px;
+    margin-top: 4px;
+  }
+
+  .grid{
+    display:grid; 
+    grid-template-columns:1fr 420px; 
+    gap:24px;
+  }
+  
+  @media (max-width:980px){ 
+    .grid{
+      grid-template-columns:1fr; 
+    } 
+  }
+
+  .card{
+    background:var(--card); 
+    border-radius:var(--radius); 
+    padding:24px; 
+    box-shadow:0 10px 35px rgba(20,30,60,0.08); 
+    overflow:hidden;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(20,30,60,0.12);
+  }
+  
+  .label{
+    font-weight:600; 
+    font-size:14px; 
+    color:#0f172a; 
+    margin-top:16px; 
+    display:block;
+  }
+  
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea {
+    width:100%; 
+    padding:12px 14px; 
+    border-radius:10px; 
+    border:1px solid #e2e8f0; 
+    margin-top:8px; 
+    font-size:14px;
+    transition: all 0.2s ease;
+    background-color: var(--light-bg);
+  }
+  
+  input:focus, textarea:focus, select:focus{ 
+    outline:none; 
+    transform:translateY(-2px); 
+    box-shadow:0 8px 20px rgba(6, 182, 212, 0.1); 
+    border-color:var(--accent2); 
+    background-color: white;
+  }
+  
+  textarea{
+    min-height:100px; 
+    resize:vertical;
+    line-height: 1.5;
+  }
+  
+  .row{
+    display:flex; 
+    gap:12px;
+  }
+  
+  .row .col{
+    flex:1;
+  }
+
+  .hint{
+    font-size:13px;
+    color:var(--muted); 
+    margin-top:6px;
+  }
+  
+  .error{
+    color:var(--error); 
+    font-size:13px; 
+    margin-top:6px; 
+    display:none;
+    font-weight: 500;
+  }
+
+  .file-row{
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+    margin-top:8px;
+  }
+  
+  #profilePreview{
+    width:90px;
+    height:90px;
+    border-radius:16px;
+    object-fit:cover;
+    border:3px solid white;
+    display:none;
+    box-shadow:0 8px 25px rgba(12,30,60,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  #profilePreview:hover {
+    transform: scale(1.03);
+  }
+
+  .actions{
+    display:flex; 
+    gap:12px; 
+    margin-top:24px;
+  }
+  
+  button, .btn{
+    cursor:pointer; 
+    border:0; 
+    padding:12px 20px; 
+    border-radius:10px; 
+    font-weight:700; 
+    color:white;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn-primary{
+    background: linear-gradient(90deg, var(--accent1), #6d28d9);
+    box-shadow:0 10px 30px rgba(124,58,237,0.2);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #6d28d9, var(--accent1));
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(124,58,237,0.3);
+  }
+  
+  .btn-ghost{
+    background: linear-gradient(90deg, var(--accent2), #0891b2);
+    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+  }
+  
+  .btn-ghost:hover {
+    background: linear-gradient(90deg, #0891b2, var(--accent2));
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(6, 182, 212, 0.3);
+  }
+  
+  .btn:active{
+    transform:translateY(1px);
+  }
+  
+  .btn:focus{
+    outline:3px solid rgba(6,182,212,0.2);
+  }
+
+  /* skill tags */
+  .skills-row{
+    margin-top:8px; 
+    display:flex; 
+    gap:8px; 
+    flex-wrap:wrap;
+  }
+  
+  .tag{
+    display:inline-flex; 
+    align-items:center; 
+    gap:8px; 
+    background: linear-gradient(90deg, #eef2ff, #f0f9ff); 
+    padding:8px 14px; 
+    border-radius:999px; 
+    font-size:13px; 
+    color:#0f172a;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+  }
+  
+  .tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(90deg, #e0e7ff, #e0f2fe);
+  }
+  
+  .tag .x{
+    font-weight:800; 
+    cursor:pointer; 
+    padding-left:6px; 
+    color:#94a3b8;
+    transition: color 0.2s ease;
+  }
+  
+  .tag .x:hover {
+    color: #ef4444;
+  }
+
+  /* preview */
+  #previewWrap{
+    position:sticky; 
+    top:24px;
+  }
+  
+  #cvPreview{
+    min-height:300px; 
+    transition:transform .3s ease, opacity .2s ease; 
+    opacity:0; 
+    transform:translateY(8px);
+    background: linear-gradient(180deg, white 0%, #f8fafc 100%);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  
+  #cvPreview.show{
+    opacity:1; 
+    transform:none;
+    animation: pulse 2s infinite alternate;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 10px 35px rgba(20,30,60,0.08); }
+    100% { box-shadow: 0 15px 40px rgba(124, 58, 237, 0.15); }
+  }
+  
+  .cv-head{
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    gap:16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+  
+  .cv-head h2{
+    margin:0; 
+    font-size:22px; 
+    color:var(--bg-1);
+    font-weight: 700;
+  }
+  
+  .cv-meta{
+    color:var(--muted); 
+    font-size:14px;
+    margin-top: 4px;
+  }
+  
+  .cv-block{
+    margin-top:18px;
+  }
+  
+  .cv-block h3{
+    margin:0; 
+    font-size:16px; 
+    color:#0f172a;
+    border-bottom:1px solid #e2e8f0; 
+    padding-bottom:8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .cv-block h3::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+  }
+  
+  .cv-list{
+    padding-left:20px; 
+    margin-top:10px;
+  }
+  
+  .cv-list p{
+    margin:8px 0; 
+    color:var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .p-photo{
+    width:90px;
+    height:90px;
+    border-radius:12px;
+    object-fit:cover;
+    border:3px solid white;
+    box-shadow:0 10px 30px rgba(12,30,60,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .p-photo:hover {
+    transform: rotate(2deg) scale(1.05);
+  }
+
+  .fade{
+    animation:fade .3s ease both;
+  }
+  
+  @keyframes fade{
+    from{
+      opacity:0; 
+      transform:translateY(8px);
+    } 
+    to{
+      opacity:1; 
+      transform:none;
+    }
+  }
+
+  footer{
+    margin-top:28px; 
+    text-align:center; 
+    font-size:14px; 
+    color:var(--muted);
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    body {
+      padding: 16px;
+      align-items: flex-start;
+    }
+    
+    .card {
+      padding: 18px;
+    }
+    
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .actions {
+      flex-direction: column;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+  }
+  
+  /* Loading animation for PDF generation */
+  .pdf-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(6, 182, 212, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--accent2);
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Toast styles */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  .toast-success {
+    background: var(--success);
+  }
+  .toast-warning {
+    background: var(--warning);
+  }
+  .toast-error {
+    background: var(--error);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Creative CV Generator</h1>
+        <div class="subtitle">Craft Your Professional Identity • Stand Out from the Crowd</div>
+      </div>
+      <div class="hint">✨ Tip: Add skills by typing and pressing Enter or comma</div>
+    </header>
+
+    <div class="grid">
+      <!-- Form -->
+      <section class="card">
+        <form id="cvForm" onsubmit="return false" autocomplete="off">
+          <div class="row">
+            <div class="col">
+              <label class="label">Full Name *</label>
+              <input id="fullName" type="text" placeholder="e.g. Malik Abdullah" />
+              <div id="errName" class="error">Name is required</div>
+            </div>
+            <div class="col">
+              <label class="label">Father's Name</label>
+              <input id="fatherName" type="text" placeholder="e.g. Muhammad ..." />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label class="label">CNIC *</label>
+              <input id="cnic" type="text" placeholder="12345-1234567-1 or 13 digits" />
+              <div id="errCNIC" class="error">Enter valid CNIC</div>
+            </div>
+            <div class="col">
+              <label class="label">Marital Status</label>
+              <select id="marital">
+                <option value="">-- Select --</option>
+                <option>Single</option>
+                <option>Married</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label class="label">Date of Birth</label>
+              <input id="dob" type="date" />
+            </div>
+            <div class="col">
+              <label class="label">Nationality</label>
+              <input id="nationality" type="text" placeholder="e.g. Pakistani" />
+            </div>
+          </div>
+
+          <label class="label">Email *</label>
+          <input id="email" type="email" placeholder="you@example.com" />
+          <div id="errEmail" class="error">Enter a valid email</div>
+
+          <div class="row">
+            <div class="col">
+              <label class="label">Phone *</label>
+              <input id="phone" type="tel" placeholder="03001234567 or +923001234567" />
+              <div id="errPhone" class="error">Enter valid phone</div>
+            </div>
+            <div class="col">
+              <label class="label">Address</label>
+              <input id="address" type="text" placeholder="City, Street..." />
+            </div>
+          </div>
+
+          <label class="label">Profile Photo (optional, &lt;2MB)</label>
+          <div class="file-row">
+            <input id="profileFile" type="file" accept="image/*" />
+            <img id="profilePreview" alt="Preview"/>
+          </div>
+          <div class="hint">✨ Preview will be embedded into the PDF.</div>
+
+          <label class="label" style="margin-top:16px">Education *</label>
+          <textarea id="education" placeholder="Degree, Institute, Year, details..."></textarea>
+          <div id="errEducation" class="error">Add education details</div>
+
+          <label class="label">Work Experience *</label>
+          <textarea id="experience" placeholder="Role, Company, Years, responsibilities..."></textarea>
+          <div id="errExperience" class="error">Add experience details</div>
+
+          <label class="label">Skills *</label>
+          <input id="skillsInput" type="text" placeholder="Type skill and press Enter or comma" />
+          <div class="skills-row" id="skillsContainer"></div>
+          <div id="errSkills" class="error">Add at least one skill</div>
+
+          <label class="label">About Me</label>
+          <textarea id="about" placeholder="Write a short introduction about yourself..."></textarea>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="btnGenerate">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+              Generate Preview
+            </button>
+            <button class="btn btn-ghost" id="btnDownload">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download PDF
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Preview -->
+      <aside id="previewWrap">
+        <div id="cvPreview" class="card">
+          <div id="cvContent" class="fade">
+            <div class="cv-head">
+              <div>
+                <h2 id="p_name">Your Name</h2>
+                <div class="cv-meta" id="p_meta">Email • Phone</div>
+              </div>
+              <img id="p_photo" class="p-photo" src="" alt="" style="display:none"/>
+            </div>
+
+            <div class="cv-block">
+              <h3>Personal Information</h3>
+              <div class="cv-list">
+                <p id="p_father"></p>
+                <p id="p_cnic"></p>
+                <p id="p_dob"></p>
+                <p id="p_address"></p>
+                <p id="p_nationality"></p>
+              </div>
+            </div>
+
+            <div class="cv-block">
+              <h3>Education</h3>
+              <div id="p_education" class="cv-list"></div>
+            </div>
+
+            <div class="cv-block">
+              <h3>Experience</h3>
+              <div id="p_experience" class="cv-list"></div>
+            </div>
+
+            <div class="cv-block">
+              <h3>Skills</h3>
+              <div id="p_skills" class="cv-list"></div>
+            </div>
+
+            <div class="cv-block">
+              <h3>About Me</h3>
+              <div id="p_about" class="cv-list"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Made with ❤️ • Interactive & Animated • Professional Output</footer>
+  </div>
+
+  <!-- PDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+  <script>
+    // Elements
+    const fullName = document.getElementById('fullName');
+    const fatherName = document.getElementById('fatherName');
+    const cnic = document.getElementById('cnic');
+    const marital = document.getElementById('marital');
+    const dob = document.getElementById('dob');
+    const nationality = document.getElementById('nationality');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const address = document.getElementById('address');
+    const profileFile = document.getElementById('profileFile');
+    const profilePreview = document.getElementById('profilePreview');
+
+    const education = document.getElementById('education');
+    const experience = document.getElementById('experience');
+    const skillsInput = document.getElementById('skillsInput');
+    const skillsContainer = document.getElementById('skillsContainer');
+    const about = document.getElementById('about');
+
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnDownload = document.getElementById('btnDownload');
+
+    // preview fields
+    const p_name = document.getElementById('p_name');
+    const p_meta = document.getElementById('p_meta');
+    const p_photo = document.getElementById('p_photo');
+    const p_father = document.getElementById('p_father');
+    const p_cnic = document.getElementById('p_cnic');
+    const p_dob = document.getElementById('p_dob');
+    const p_address = document.getElementById('p_address');
+    const p_nationality = document.getElementById('p_nationality');
+    const p_education = document.getElementById('p_education');
+    const p_experience = document.getElementById('p_experience');
+    const p_skills = document.getElementById('p_skills');
+    const p_about = document.getElementById('p_about');
+    const cvPreview = document.getElementById('cvPreview');
+
+    // error elements
+    const errName = document.getElementById('errName');
+    const errCNIC = document.getElementById('errCNIC');
+    const errEmail = document.getElementById('errEmail');
+    const errPhone = document.getElementById('errPhone');
+    const errEducation = document.getElementById('errEducation');
+    const errExperience = document.getElementById('errExperience');
+    const errSkills = document.getElementById('errSkills');
+
+    // small state
+    let skillsList = [];
+    let profileDataURL = '';
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function safeText(s){ 
+      return escapeHtml((s||'').toString()); 
+    }
+
+    // PROFILE IMAGE PREVIEW -> convert to dataURL so PDF embeds fine
+    profileFile.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f){ profilePreview.style.display='none'; profileDataURL=''; p_photo.style.display='none'; return; }
+      if(f.size > 2*1024*1024){ 
+        showToast('Please use image under 2MB', 'warning');
+        profileFile.value=''; 
+        return; 
+      }
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        profileDataURL = ev.target.result;
+        profilePreview.src = profileDataURL; 
+        profilePreview.style.display='block';
+        p_photo.src = profileDataURL; 
+        p_photo.style.display='block';
+        animatePreview();
+        showToast('Profile photo added successfully!', 'success');
+      }
+      reader.readAsDataURL(f);
+    });
+
+    // SKILLS input: Add tag on Enter or comma
+    skillsInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ','){
+        e.preventDefault();
+        const val = skillsInput.value.trim().replace(/,+$/,'');
+        if(val && !skillsList.includes(val)){
+          skillsList.push(val);
+          updateSkills();
+        }
+        skillsInput.value='';
+      }
+    });
+
+    function updateSkills(){
+      skillsContainer.innerHTML='';
+      p_skills.innerHTML='';
+      skillsList.forEach((s,idx)=>{
+        const tag = document.createElement('span');
+        tag.className='tag fade';
+        tag.innerHTML = `${safeText(s)} <span class="x" onclick="removeSkill(${idx})">×</span>`;
+        skillsContainer.appendChild(tag);
+        const li = document.createElement('p');
+        li.textContent = "• " + s;
+        p_skills.appendChild(li);
+      });
+      errSkills.style.display = skillsList.length? 'none':'block';
+      animatePreview();
+    }
+
+    function removeSkill(i){ 
+      skillsList.splice(i,1); 
+      updateSkills();
+      showToast('Skill removed', 'warning');
+    }
+
+    // Live update preview for many fields (minor animation)
+    const liveFields = [fullName, fatherName, cnic, dob, email, phone, address, education, experience, about];
+    liveFields.forEach(el => { if(el) el.addEventListener('input', updateLivePreview); });
+    marital.addEventListener('change', updateLivePreview);
+    nationality.addEventListener('input', updateLivePreview);
+
+    function updateLivePreview(){
+      p_name.textContent = safeText(fullName.value) || 'Your Name';
+      p_meta.textContent = `${safeText(email.value)||'email'} • ${safeText(phone.value)||'phone'}`;
+      p_father.textContent = fatherName.value? `Father: ${safeText(fatherName.value)}` : '';
+      p_cnic.textContent = cnic.value? `CNIC: ${safeText(cnic.value)}` : '';
+      p_dob.textContent = dob.value? `DOB: ${new Date(dob.value).toLocaleDateString()}` : '';
+      p_address.textContent = address.value? `Address: ${safeText(address.value)}` : '';
+      p_nationality.textContent = nationality.value? `Nationality: ${safeText(nationality.value)}` : '';
+      p_education.innerHTML = education.value? education.value.replace(/\n/g,'<br>') : '';
+      p_experience.innerHTML = experience.value? experience.value.replace(/\n/g,'<br>') : '';
+      p_about.innerHTML = about.value? about.value.replace(/\n/g,'<br>') : '';
+      // skills already updated by updateSkills()
+      animatePreview();
+    }
+
+    function animatePreview(){
+      cvPreview.classList.remove('show');
+      void cvPreview.offsetWidth;
+      cvPreview.classList.add('show');
+    }
+
+    // Validation functions
+    function validateAll(){
+      let ok = true;
+      if(!fullName.value.trim()){ errName.style.display='block'; ok=false } else { errName.style.display='none' }
+      const cval = cnic.value.replace(/\s/g,'');
+      const cnicOK = /^(\d{13}|\d{5}-\d{7}-\d)$/.test(cval);
+      if(!cnicOK){ errCNIC.style.display='block'; ok=false } else { errCNIC.style.display='none' }
+      const eOK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      if(!eOK){ errEmail.style.display='block'; ok=false } else { errEmail.style.display='none' }
+      const phoneVal = phone.value.trim();
+      const phoneOK = /^(\+92|0)?3[0-9]{2}[-\s]?[0-9]{7}$/.test(phoneVal);
+      if(!phoneOK){ errPhone.style.display='block'; ok=false } else { errPhone.style.display='none' }
+      if(!education.value.trim()){ errEducation.style.display='block'; ok=false } else { errEducation.style.display='none' }
+      if(!experience.value.trim()){ errExperience.style.display='block'; ok=false } else { errExperience.style.display='none' }
+      if(skillsList.length === 0){ errSkills.style.display='block'; ok=false } else { errSkills.style.display='none' }
+      return ok;
+    }
+
+    // Generate preview (finalize)
+    btnGenerate.addEventListener('click', ()=>{
+      if(!validateAll()){ 
+        window.scrollTo({top:0,behavior:'smooth'}); 
+        showToast('Please fill all required fields', 'warning');
+        return; 
+      }
+      updateLivePreview();
+      animatePreview();
+      document.getElementById('cvPreview').scrollIntoView({behavior:'smooth'});
+      showToast('Preview generated successfully!', 'success');
+    });
+
+    // Show toast notification
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3000);
+    }
+
+    // PDF download
+    btnDownload.addEventListener('click', ()=>{
+      if(!validateAll()){ 
+        window.scrollTo({top:0,behavior:'smooth'}); 
+        showToast('Please fill all required fields', 'warning');
+        return; 
+      }
+      
+      // Show loading indicator
+      const loading = document.createElement('div');
+      loading.className = 'pdf-loading';
+      loading.innerHTML = `
+        <div class="spinner"></div>
+        <div>Generating your professional CV...</div>
+      `;
+      document.body.appendChild(loading);
+      
+      const preview = document.getElementById('cvPreview');
+      const clone = preview.cloneNode(true);
+      clone.style.boxShadow='none'; 
+      clone.style.padding='28px'; 
+      clone.style.margin='0 auto'; 
+      clone.style.maxWidth='720px';
+      
+      const opt = {
+        margin: 12,
+        filename: `${(fullName.value.trim()||'My')}_CV.pdf`,
+        image: {type: 'jpeg', quality: 0.98},
+        html2canvas: {scale: 2, useCORS: true},
+        jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'}
+      };
+      
+      const wrapper = document.createElement('div');
+      wrapper.style.background='white'; 
+      wrapper.style.padding='24px';
+      wrapper.appendChild(clone);
+      wrapper.style.position='fixed'; 
+      wrapper.style.left='-9999px'; 
+      document.body.appendChild(wrapper);
+      
+      html2pdf().set(opt).from(wrapper).save()
+        .then(()=>{ 
+          wrapper.remove(); 
+          loading.remove();
+          showToast('CV downloaded successfully!', 'success');
+        })
+        .catch(err => {
+          console.error('PDF generation error:', err);
+          wrapper.remove();
+          loading.remove();
+          showToast('Failed to generate PDF', 'error');
+        });
+    });
+
+    // Initialize with some sample data for demo
+    function initSampleData() {
+      fullName.value = 'Malik Abdullah';
+      fatherName.value = 'Muhammad Khan';
+      cnic.value = '12345-1234567-1';
+      marital.value = 'Single';
+      dob.value = '1990-01-15';
+      nationality.value = 'Pakistani';
+      email.value = 'malik@example.com';
+      phone.value = '03001234567';
+      address.value = '123 Main Street, Lahore';
+      education.value = 'BSc Computer Science\nUniversity of Punjab, 2012\nGPA: 3.8/4.0';
+      experience.value = 'Senior Developer\nTech Solutions Ltd, 2018-Present\n- Lead development team\n- Implemented new features';
+      about.value = 'Passionate software developer with 8+ years of experience in web development. Strong problem-solving skills and team player.';
+      
+      skillsList = ['JavaScript', 'React', 'Node.js', 'HTML/CSS', 'MongoDB'];
+      updateSkills();
+      updateLivePreview();
+    }
+
+    // initialize
+    window.removeSkill = removeSkill;
+    
+    // Uncomment next line for demo with sample data
+    // initSampleData();
+  </script>
+</body>
+</html>
